@@ -1,4 +1,5 @@
-const scapper = require("./scrapper");
+const cheerio = require("cheerio");
+const axios = require("axios");
 const express = require("express");
 const { env } = require("process");
 const cors = require("cors");
@@ -12,11 +13,11 @@ async function scrape() {
 	);
 	const body = await res.data;
 	const $ = cheerio.load(body);
+	let final = [];
 
-	const caption = $(`ul`).text();
-
-	const final = [];
-	final.push(caption);
+	$(`.m-detail--body ul li`)
+		.get()
+		.map((li) => final.push($(li).text()));
 	return final;
 }
 

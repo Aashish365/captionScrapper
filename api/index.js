@@ -14,10 +14,24 @@ async function scrape() {
 	const body = await res.data;
 	const $ = cheerio.load(body);
 	let final = [];
+	// $(`.m-detail--body ul li`)
+	// 	.get()
+	//     .map((li) => captions.push($(li).text())
+	//     );
 
-	$(`.m-detail--body ul li`)
-		.get()
-		.map((li) => final.push($(li).text()));
+	$(`.m-detail--body ul`).each((_, ul) => {
+		let title = $(ul.previousSibling.previousSibling).text();
+		let captions = [];
+		$(ul)
+			.children()
+			.each((_, li) => {
+				captions.push($(li).text());
+			});
+
+		let data = { title, captions };
+		final.push(data);
+	});
+
 	return final;
 }
 
